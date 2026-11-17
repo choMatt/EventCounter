@@ -145,7 +145,7 @@ export default function App() {
       </aside>
       <main className="dashboard-content">
       <section className="page-heading"><div><p className="eyebrow">EVENT MANAGEMENT</p><h1>Event check-in</h1><p className="subheading">Manage multiple events and keep every count separate.</p></div><button className="primary-button new-event-button" onClick={addEvent}>＋ Add event</button></section>
-      {!event ? <section className="panel empty-active-state"><h2>No active events</h2><p>Add an event to start tracking check-ins and guest categories.</p><button className="primary-button" onClick={addEvent}>＋ Create your first event</button></section> : <div className="dashboard-grid">
+      {!event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <div className="dashboard-grid">
       <div className="dashboard-left">
       <section className="event-panel panel">
         <div className="panel-title-row"><div><p className="eyebrow">01 / EVENT DETAILS</p><h2>Event information</h2></div><span className="status-tag"><span /> Active event</span></div>
