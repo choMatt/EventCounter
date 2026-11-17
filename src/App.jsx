@@ -112,9 +112,9 @@ export default function App() {
       <a className="brand" href="#top"><span className="brand-mark">EC</span><span>Event<span className="brand-light">Counter</span></span></a>
       <div className="live-pill"><span /> LIVE EVENT TRACKER</div>
     </header>
-    <div className="content" id="top">
-      <section className="page-heading"><div><p className="eyebrow">EVENT MANAGEMENT</p><h1>Event check-in</h1><p className="subheading">Manage multiple events and keep every count separate.</p></div><button className="primary-button new-event-button" onClick={addEvent}>＋ Add event</button></section>
-
+    <div className="workspace" id="top">
+      <aside className="sidebar">
+        <a className="sidebar-brand" href="#top">ACTIVE WORKSPACE</a>
       <section className="active-events-section">
         <div className="section-heading"><div><p className="eyebrow">YOUR WORKSPACE</p><h2>Active events</h2></div><span className="history-count">{events.length} active</span></div>
         <div className="event-tabs">
@@ -124,7 +124,15 @@ export default function App() {
           <button className="add-event-tab" onClick={addEvent}>＋ <span>Add another</span></button>
         </div>
       </section>
-
+      <section className="sidebar-history">
+        <div className="section-heading"><div><p className="eyebrow">SAVED RECORDS</p><h2>Event history</h2></div><span className="history-count">{history.length}</span></div>
+        {!history.length ? <p className="sidebar-empty">Saved events will appear here.</p> : <div className="sidebar-history-list">{history.map(item => <article className="sidebar-history-item" key={item.id}><div><strong>{item.venue || 'Untitled event'}</strong><small>{formatTime(item.time)} · {item.total ?? eventTotal(item)} guests</small></div><button className="text-button" onClick={() => openHistory(item)}>Restore</button><button className="delete-button" aria-label="Delete saved event" onClick={() => removeHistory(item.id)}>×</button></article>)}</div>}
+      </section>
+      </aside>
+      <main className="dashboard-content">
+      <section className="page-heading"><div><p className="eyebrow">EVENT MANAGEMENT</p><h1>Event check-in</h1><p className="subheading">Manage multiple events and keep every count separate.</p></div><button className="primary-button new-event-button" onClick={addEvent}>＋ Add event</button></section>
+      <div className="dashboard-grid">
+      <div className="dashboard-left">
       <section className="event-panel panel">
         <div className="panel-title-row"><div><p className="eyebrow">01 / EVENT DETAILS</p><h2>Event information</h2></div><span className="status-tag"><span /> Active event</span></div>
         <div className="details-grid">
@@ -140,6 +148,8 @@ export default function App() {
         </div>
         <div className="progress-area"><div className="progress-meta"><span>Capacity used</span><strong>{progress.toFixed(0)}%</strong></div><div className="progress-track"><div className="progress-fill" style={{ width: `${progress}%` }} /></div></div>
       </section>
+      </div>
+      <div className="dashboard-right">
       <section className="categories-section"><div className="section-heading"><div><p className="eyebrow">03 / BREAKDOWN</p><h2>Guest categories</h2></div><span className="muted-note">Tap to adjust counts</span></div>
         <div className="counter-grid"><Counter label="Frees" value={event.frees} onChange={v => update('frees', v)} tone="purple" description="Complimentary" /><Counter label="Cash" value={event.cash} onChange={v => update('cash', v)} tone="green" description="Cash payments" /><Counter label="Cards" value={event.cards} onChange={v => update('cards', v)} tone="blue" description="Card payments" /></div>
       </section>
@@ -147,10 +157,10 @@ export default function App() {
       <section className="report-panel panel"><div className="panel-title-row"><div><p className="eyebrow">04 / REPORT</p><h2>Generated report</h2><p className="report-description">This report belongs to {event.venue.trim() || 'the selected event'}.</p></div><span className={`ready-tag ${savedStatus ? 'saved' : ''}`}>{savedStatus ? 'Saved' : 'Ready'}</span></div>
         <pre className="report-output">{report}</pre><div className="report-actions"><button className="primary-button" onClick={save}>Save event</button><button className="secondary-button" onClick={copy}>Copy report</button><button className="secondary-button share-button" onClick={share}>Share</button><button className="finish-button" onClick={finishEvent}>Finish event</button></div>{notice && <p className="notice" role="status">{notice}</p>}
       </section>
-      <section className="history-section"><div className="section-heading"><div><p className="eyebrow">05 / SAVED RECORDS</p><h2>Event history</h2></div><span className="history-count">{history.length} saved</span></div>
-        {!history.length ? <div className="empty-history"><span className="empty-icon">↗</span><strong>No saved events yet</strong><p>Save or finish an event to keep a record of its final counts.</p></div> : <div className="history-list">{history.map(item => <article className="history-item" key={item.id}><div className="history-info"><strong>{item.venue || 'Untitled event'}</strong><span>{formatTime(item.time)} · {new Date(item.savedAt || item.createdAt).toLocaleDateString()}</span></div><div className="history-total"><strong>{item.total ?? eventTotal(item)}</strong><span>guests</span></div><button className="text-button" onClick={() => openHistory(item)}>Restore</button><button className="delete-button" aria-label="Delete saved event" onClick={() => removeHistory(item.id)}>×</button></article>)}</div>}
-      </section>
+      </div>
+      </div>
       <footer className="footer"><span>EventCounter</span><span>Your event, counted.</span></footer>
+      </main>
     </div>
   </div>
 }
