@@ -127,3 +127,15 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
   .dashboard-content .counter-card{display:flex;align-items:center;justify-content:space-between}
   .dashboard-content .counter-actions{width:100px;margin:0}
 }
+
+
+/* Center the dashboard content in the space beside the sidebar */
+@media (min-width:901px){
+  .dashboard-content>.page-heading,
+  .dashboard-content>.dashboard-grid,
+  .dashboard-content>.footer{
+    width:min(100%,1200px);
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
