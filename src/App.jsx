@@ -106,6 +106,23 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
   const removeHistory = id => setHistory(list => list.filter(item => item.id !== id))
+  const deleteEvent = id => {
+    const target = events.find(item => item.id === id)
+    if (!target) return
+    const name = target.venue.trim() || 'this event'
+    if (!window.confirm(`Delete ${name}? This will permanently remove it from active events and cannot be undone.`)) return
+    if (events.length === 1) {
+      const fresh = newEvent()
+      setEvents([fresh])
+      setActiveId(fresh.id)
+    } else {
+      const remaining = events.filter(item => item.id !== id)
+      setEvents(remaining)
+      if (activeId === id) setActiveId(remaining[0].id)
+    }
+    setSavedStatus(false)
+    setNotice(`Deleted ${name}.`)
+  }
 
   return <div className="app-shell">
     <header className="topbar">
@@ -118,9 +135,12 @@ export default function App() {
       <section className="active-events-section">
         <div className="section-heading"><div><p className="eyebrow">YOUR WORKSPACE</p><h2>Active events</h2></div><span className="history-count">{events.length} active</span></div>
         <div className="event-tabs">
-          {events.map((item, index) => <button key={item.id} className={`event-tab ${item.id === event.id ? 'selected' : ''}`} onClick={() => { setActiveId(item.id); setSavedStatus(false); setNotice('') }}>
-            <span className="event-tab-indicator" /><span className="event-tab-text"><strong>{item.venue.trim() || `New event ${index + 1}`}</strong><small>{formatTime(item.time)} · {eventTotal(item)} guests</small></span><span className="event-tab-arrow">›</span>
-          </button>)}
+          {events.map((item, index) => <div key={item.id} className={`event-tab ${item.id === event.id ? 'selected' : ''}`}>
+            <button className="event-tab-main" onClick={() => { setActiveId(item.id); setSavedStatus(false); setNotice('') }}>
+              <span className="event-tab-indicator" /><span className="event-tab-text"><strong>{item.venue.trim() || `New event ${index + 1}`}</strong><small>{formatTime(item.time)} · {eventTotal(item)} guests</small></span><span className="event-tab-arrow">›</span>
+            </button>
+            <button className="event-delete-button" aria-label={`Delete ${item.venue || 'event'}`} title="Delete event" onClick={() => deleteEvent(item.id)}>×</button>
+          </div>)}
           <button className="add-event-tab" onClick={addEvent}>＋ <span>Add another</span></button>
         </div>
       </section>
