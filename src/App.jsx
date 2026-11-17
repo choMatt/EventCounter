@@ -88,14 +88,9 @@ export default function App() {
   const finishEvent = () => {
     const item = { ...event, total, savedAt: new Date().toISOString() }
     setHistory(list => [item, ...list.filter(x => x.id !== event.id)].slice(0, 50))
-    if (events.length === 1) {
-      const fresh = newEvent()
-      setEvents([fresh]); setActiveId(fresh.id)
-    } else {
-      const remaining = events.filter(x => x.id !== event.id)
-      setEvents(remaining)
-      setActiveId(remaining[0].id)
-    }
+    const remaining = events.filter(x => x.id !== event.id)
+    setEvents(remaining)
+    setActiveId(remaining[0]?.id || null)
     setSavedStatus(false)
     setNotice('Event finished and moved to history.')
   }
