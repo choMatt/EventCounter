@@ -170,7 +170,6 @@ export default function App() {
           <div className="create-event-actions"><button className="primary-button" type="submit">Start event</button><button className="secondary-button" type="button" onClick={() => setShowCreateForm(false)}>Cancel</button></div>
         </form>
       </section> : viewMode === 'grid' ? <section className="events-grid-view">
-        <div className="grid-view-heading"><div><p className="eyebrow">ACTIVE WORKSPACE</p><h1>All active events</h1><p>Manage every event from one view.</p></div><span className="history-count">{events.length} active events</span></div>
         {events.length === 0 ? <div className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></div> : <div className="active-event-grid">
           {events.map(item => {
             const itemTotal = eventTotal(item)
