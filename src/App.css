@@ -139,3 +139,11 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
     margin-right:auto;
   }
 }
+
+
+/* Active event delete control */
+.sidebar .event-tab{display:flex;align-items:stretch;gap:4px;padding:4px 6px 4px 9px}
+.event-tab-main{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:6px 3px;border:0;background:transparent;text-align:left}
+.event-delete-button{flex:none;width:25px;height:25px;align-self:center;border:0;border-radius:6px;color:#a1aaa5;background:transparent;font-size:19px;line-height:1}
+.event-delete-button:hover{color:#b94b42;background:#fff0ee}
+.event-tab-main .event-tab-text{flex:1}
