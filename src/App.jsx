@@ -38,6 +38,7 @@ export default function App() {
   const [activeId, setActiveId] = useState(saved.activeId && initialEvents.some(item => item.id === saved.activeId) ? saved.activeId : initialEvents[0]?.id || null)
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showReport, setShowReport] = useState(false)
+  const [viewMode, setViewMode] = useState('dashboard')
   const [draft, setDraft] = useState({ venue: '', time: nowTime(), capacity: '' })
   const [history, setHistory] = useState(() => saved.history || [])
   const [notice, setNotice] = useState('')
@@ -61,6 +62,10 @@ export default function App() {
 
   const update = (field, value) => {
     setEvents(list => list.map(item => item.id === event.id ? { ...item, [field]: value } : item))
+    setSavedStatus(false)
+  }
+  const updateGridEvent = (id, field, value) => {
+    setEvents(list => list.map(item => item.id === id ? { ...item, [field]: Math.max(0, Number(value) || 0) } : item))
     setSavedStatus(false)
   }
   const addEvent = () => {
@@ -134,6 +139,10 @@ export default function App() {
     <div className="workspace" id="top">
       <aside className="sidebar">
         <a className="sidebar-brand" href="#top">ACTIVE WORKSPACE</a>
+      <nav className="sidebar-view-nav" aria-label="Workspace views">
+        <button className={`sidebar-view-button ${viewMode === 'dashboard' ? 'selected' : ''}`} onClick={() => setViewMode('dashboard')}><span>▣</span> Dashboard</button>
+        <button className={`sidebar-view-button ${viewMode === 'grid' ? 'selected' : ''}`} onClick={() => { setViewMode('grid'); setShowCreateForm(false) }}><span>▦</span> Grid view <small>{events.length}</small></button>
+      </nav>
       <section className="active-events-section">
         <div className="section-heading"><div><p className="eyebrow">YOUR WORKSPACE</p><h2>Active events</h2></div><span className="history-count">{events.length} active</span></div>
         <div className="event-tabs">
@@ -160,6 +169,24 @@ export default function App() {
           <label className="field"><span>Event capacity</span><input required type="number" min="0" inputMode="numeric" value={draft.capacity} onChange={e => setDraft(d => ({ ...d, capacity: e.target.value }))} placeholder="Enter capacity" /></label>
           <div className="create-event-actions"><button className="primary-button" type="submit">Start event</button><button className="secondary-button" type="button" onClick={() => setShowCreateForm(false)}>Cancel</button></div>
         </form>
+      </section> : viewMode === 'grid' ? <section className="events-grid-view">
+        <div className="grid-view-heading"><div><p className="eyebrow">ACTIVE WORKSPACE</p><h1>All active events</h1><p>Manage every event from one view.</p></div><span className="history-count">{events.length} active events</span></div>
+        {events.length === 0 ? <div className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></div> : <div className="active-event-grid">
+          {events.map(item => {
+            const itemTotal = eventTotal(item)
+            const itemCapacity = Math.max(0, Number(item.capacity) || 0)
+            const itemProgress = itemCapacity ? Math.min(100, Number(item.checkIn || 0) / itemCapacity * 100) : 0
+            return <article className="active-event-card panel" key={item.id}>
+              <div className="active-event-card-head"><div><p className="eyebrow">ACTIVE EVENT</p><h2>{item.venue || 'Untitled event'}</h2><p className="active-event-meta">{formatTime(item.time)} <span>·</span> {itemCapacity.toLocaleString()} capacity</p></div><button className="open-event-button" onClick={() => { setActiveId(item.id); setViewMode('dashboard'); setSavedStatus(false); setNotice('') }}>Open</button></div>
+              <div className="grid-checkin"><div><span>CHECK IN</span><strong>{item.checkIn}</strong><small>of {itemCapacity.toLocaleString()} capacity</small></div><div className="grid-card-actions"><button disabled={item.checkIn <= 0} onClick={() => updateGridEvent(item.id,'checkIn',Number(item.checkIn || 0)-1)} aria-label="Decrease check-ins">−</button><button onClick={() => updateGridEvent(item.id,'checkIn',Number(item.checkIn || 0)+1)} aria-label="Increase check-ins">＋</button></div></div>
+              <div className="grid-progress"><span style={{width:`${itemProgress}%`}} /></div>
+              <div className="grid-category-controls">
+                {['frees','cash','cards'].map((field) => <div className={`grid-category ${field}`} key={field}><div><span>{field.toUpperCase()}</span><strong>{item[field]}</strong></div><div className="grid-card-actions"><button disabled={item[field] <= 0} onClick={() => updateGridEvent(item.id,field,Number(item[field] || 0)-1)} aria-label={`Decrease ${field}`}>−</button><button onClick={() => updateGridEvent(item.id,field,Number(item[field] || 0)+1)} aria-label={`Increase ${field}`}>＋</button></div></div>)}
+              </div>
+              <div className="grid-event-total"><span>Total guests</span><strong>{itemTotal.toLocaleString()}</strong></div>
+            </article>
+          })}
+        </div>}
       </section> : !event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <div className="dashboard-grid">
       <div className="dashboard-left">
       <section className="checkin-panel panel">
