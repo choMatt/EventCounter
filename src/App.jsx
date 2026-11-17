@@ -135,7 +135,7 @@ export default function App() {
             </button>
             <button className="event-delete-button" aria-label={`Delete ${item.venue || 'event'}`} title="Delete event" onClick={() => deleteEvent(item.id)}>×</button>
           </div>)}
-          <button className="add-event-tab" onClick={addEvent}>＋ <span>Add another</span></button>
+          <button className="add-event-tab" onClick={addEvent}>＋ <span>Add event</span></button>
         </div>
       </section>
       <section className="sidebar-history">
@@ -144,7 +144,6 @@ export default function App() {
       </section>
       </aside>
       <main className="dashboard-content">
-      <section className="page-heading"><div><p className="eyebrow">EVENT MANAGEMENT</p><h1>Event check-in</h1><p className="subheading">Manage multiple events and keep every count separate.</p></div><button className="primary-button new-event-button" onClick={addEvent}>＋ Add event</button></section>
       {!event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <div className="dashboard-grid">
       <div className="dashboard-left">
       <section className="event-panel panel">
