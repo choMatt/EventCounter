@@ -147,3 +147,27 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
 .event-delete-button{flex:none;width:25px;height:25px;align-self:center;border:0;border-radius:6px;color:#a1aaa5;background:transparent;font-size:19px;line-height:1}
 .event-delete-button:hover{color:#b94b42;background:#fff0ee}
 .event-tab-main .event-tab-text{flex:1}
+
+
+/* Center and emphasize the empty-events message */
+.empty-active-state{
+  min-height: min(62vh,560px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:48px 24px;
+}
+.empty-active-state h2{
+  margin:0 0 12px;
+  font-size:clamp(28px,3vw,42px);
+  line-height:1.15;
+  letter-spacing:-1.2px;
+}
+.empty-active-state p{
+  margin:0;
+  font-size:clamp(16px,1.5vw,20px);
+  line-height:1.5;
+  color:var(--muted);
+}
