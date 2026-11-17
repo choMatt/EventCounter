@@ -39,22 +39,22 @@ export default function App() {
   const [history, setHistory] = useState(() => saved.history || [])
   const [notice, setNotice] = useState('')
   const [savedStatus, setSavedStatus] = useState(false)
-  const event = events.find(item => item.id === activeId) || events[0]
-  const total = eventTotal(event)
-  const capacity = Math.max(0, Number(event.capacity) || 0)
-  const progress = capacity ? Math.min(100, event.checkIn / capacity * 100) : 0
+  const event = events.find(item => item.id === activeId) || events[0] || null
+  const total = event ? eventTotal(event) : 0
+  const capacity = event ? Math.max(0, Number(event.capacity) || 0) : 0
+  const progress = capacity && event ? Math.min(100, event.checkIn / capacity * 100) : 0
 
   useEffect(() => {
     localStorage.setItem(KEY, JSON.stringify({ events, activeId, history }))
   }, [events, activeId, history])
 
-  const report = [
+  const report = event ? [
     `WHERE: ${event.venue.trim() || '—'}`,
     `TIME: ${formatTime(event.time)}`,
     `CHECK IN: ${event.checkIn}/${capacity}`,
     `FREES: ${event.frees}`, `CASH: ${event.cash}`,
     `CARDS: ${event.cards}`, `TOTAL: ${total}`,
-  ].join('\n')
+  ].join('\n') : 'No active event selected.'
 
   const update = (field, value) => {
     setEvents(list => list.map(item => item.id === event.id ? { ...item, [field]: value } : item))
@@ -111,15 +111,9 @@ export default function App() {
     if (!target) return
     const name = target.venue.trim() || 'this event'
     if (!window.confirm(`Delete ${name}? This will permanently remove it from active events and cannot be undone.`)) return
-    if (events.length === 1) {
-      const fresh = newEvent()
-      setEvents([fresh])
-      setActiveId(fresh.id)
-    } else {
-      const remaining = events.filter(item => item.id !== id)
-      setEvents(remaining)
-      if (activeId === id) setActiveId(remaining[0].id)
-    }
+    const remaining = events.filter(item => item.id !== id)
+    setEvents(remaining)
+    if (activeId === id) setActiveId(remaining[0]?.id || null)
     setSavedStatus(false)
     setNotice(`Deleted ${name}.`)
   }
@@ -151,7 +145,7 @@ export default function App() {
       </aside>
       <main className="dashboard-content">
       <section className="page-heading"><div><p className="eyebrow">EVENT MANAGEMENT</p><h1>Event check-in</h1><p className="subheading">Manage multiple events and keep every count separate.</p></div><button className="primary-button new-event-button" onClick={addEvent}>＋ Add event</button></section>
-      <div className="dashboard-grid">
+      {!event ? <section className="panel empty-active-state"><h2>No active events</h2><p>Add an event to start tracking check-ins and guest categories.</p><button className="primary-button" onClick={addEvent}>＋ Create your first event</button></section> : <div className="dashboard-grid">
       <div className="dashboard-left">
       <section className="event-panel panel">
         <div className="panel-title-row"><div><p className="eyebrow">01 / EVENT DETAILS</p><h2>Event information</h2></div><span className="status-tag"><span /> Active event</span></div>
@@ -178,7 +172,7 @@ export default function App() {
         <pre className="report-output">{report}</pre><div className="report-actions"><button className="primary-button" onClick={save}>Save event</button><button className="secondary-button" onClick={copy}>Copy report</button><button className="secondary-button share-button" onClick={share}>Share</button><button className="finish-button" onClick={finishEvent}>Finish event</button></div>{notice && <p className="notice" role="status">{notice}</p>}
       </section>
       </div>
-      </div>
+      </div>}
       <footer className="footer"><span>EventCounter</span><span>Your event, counted.</span></footer>
       </main>
     </div>
