@@ -181,13 +181,14 @@ export default function App() {
             const itemCapacity = Math.max(0, Number(item.capacity) || 0)
             const itemProgress = itemCapacity ? Math.min(100, Number(item.checkIn || 0) / itemCapacity * 100) : 0
             return <article className="active-event-card panel" key={item.id}>
-              <div className="active-event-card-head"><div><p className="eyebrow">ACTIVE EVENT</p><h2>{item.venue || 'Untitled event'}</h2><p className="active-event-meta">{formatTime(item.time)} <span>·</span> {itemCapacity.toLocaleString()} capacity</p></div><div className="grid-card-top-actions"><button className="grid-report-button" onClick={() => { setActiveId(item.id); setSavedStatus(false); setNotice(''); setShowReport(true) }}>Generate report</button><button className="open-event-button" onClick={() => { setActiveId(item.id); setViewMode('dashboard'); setSavedStatus(false); setNotice('') }}>Open</button></div></div>
+              <div className="active-event-card-head"><p className="eyebrow">ACTIVE EVENT</p><h2 title={item.venue || 'Untitled event'}>{item.venue || 'Untitled event'}</h2><p className="active-event-meta">{formatTime(item.time)} <span>·</span> {itemCapacity.toLocaleString()} capacity</p></div>
               <div className="grid-checkin"><div><span>CHECK IN</span><strong>{item.checkIn}</strong><small>of {itemCapacity.toLocaleString()} capacity</small></div><div className="grid-card-actions"><button disabled={item.checkIn <= 0} onClick={() => updateGridEvent(item.id,'checkIn',Number(item.checkIn || 0)-1)} aria-label="Decrease check-ins">−</button><button onClick={() => updateGridEvent(item.id,'checkIn',Number(item.checkIn || 0)+1)} aria-label="Increase check-ins">＋</button></div></div>
               <div className="grid-progress"><span style={{width:`${itemProgress}%`}} /></div>
               <div className="grid-category-controls">
                 {['frees','cash','cards'].map((field) => <div className={`grid-category ${field}`} key={field}><div><span>{field.toUpperCase()}</span><strong>{item[field]}</strong></div><div className="grid-card-actions"><button disabled={item[field] <= 0} onClick={() => updateGridEvent(item.id,field,Number(item[field] || 0)-1)} aria-label={`Decrease ${field}`}>−</button><button onClick={() => updateGridEvent(item.id,field,Number(item[field] || 0)+1)} aria-label={`Increase ${field}`}>＋</button></div></div>)}
               </div>
               <div className="grid-event-total"><span>Total guests</span><strong>{itemTotal.toLocaleString()}</strong></div>
+              <div className="grid-card-bottom-actions"><button className="grid-report-button" onClick={() => { setActiveId(item.id); setSavedStatus(false); setNotice(''); setShowReport(true) }}>Generate report</button><button className="open-event-button" onClick={() => { setActiveId(item.id); setViewMode('dashboard'); setSavedStatus(false); setNotice('') }}>Open</button></div>
             </article>
           })}
         </div>}
