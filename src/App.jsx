@@ -187,7 +187,9 @@ export default function App() {
             </article>
           })}
         </div>}
-      </section> : !event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <div className="dashboard-grid">
+      </section> : !event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <>
+      <header className="dashboard-event-heading"><p className="eyebrow">ACTIVE EVENT</p><h1>{event.venue || 'Untitled event'}</h1><p>{formatTime(event.time)} <span>·</span> {capacity.toLocaleString()} capacity</p></header>
+      <div className="dashboard-grid">
       <div className="dashboard-left">
       <section className="checkin-panel panel">
         <div className="panel-title-row"><div><p className="eyebrow">02 / ATTENDANCE</p><h2>Live check-in counter</h2></div><span className="live-label"><span /> Updating live</span></div>
@@ -205,7 +207,7 @@ export default function App() {
       <button className="primary-button generate-report-button" onClick={() => { setShowReport(true); setNotice('') }}>Generate report</button>
       {notice && <p className="notice" role="status">{notice}</p>}
       </div>
-      </div>}
+      </div></>}
       {showReport && event && <div className="report-modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setShowReport(false) }}>
         <section className="report-modal panel" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
           <div className="panel-title-row"><div><p className="eyebrow">04 / REPORT</p><h2 id="report-modal-title">Generated report</h2><p className="report-description">This report belongs to {event.venue.trim() || 'the selected event'}.</p></div><div className="report-modal-status"><span className={`ready-tag ${savedStatus ? 'saved' : ''}`}>{savedStatus ? 'Saved' : 'Ready'}</span><button className="report-modal-close" aria-label="Close report" onClick={() => setShowReport(false)}>×</button></div></div>
