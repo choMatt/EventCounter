@@ -304,3 +304,58 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
   .report-modal{padding:18px}
   .report-modal .report-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+
+/* Sidebar view switcher */
+.sidebar-view-nav{display:flex;flex-direction:column;gap:5px}
+.sidebar-view-button{
+  display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:0 11px;
+  border:1px solid transparent;border-radius:9px;color:#64736c;background:transparent;
+  text-align:left;font-size:12px;font-weight:650
+}
+.sidebar-view-button>span{width:18px;color:#789489;font-size:17px;text-align:center}
+.sidebar-view-button small{margin-left:auto;color:#8b9991;font-size:10px}
+.sidebar-view-button:hover{background:#f6f9f7}
+.sidebar-view-button.selected{border-color:#dcece2;color:#176c50;background:#eef7f1}
+.sidebar-view-button.selected>span{color:#176c50}
+
+/* Active events grid view */
+.events-grid-view{width:100%;min-width:0}
+.grid-view-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:5px 0 22px}
+.grid-view-heading h1{margin:0 0 6px;font-size:30px}
+.grid-view-heading p:not(.eyebrow){margin:0;color:var(--muted);font-size:12px}
+.active-event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px;align-items:start}
+.active-event-card{min-width:0;padding:20px}
+.active-event-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.active-event-card-head h2{overflow-wrap:anywhere;font-size:18px}
+.active-event-meta{margin:6px 0 0;color:var(--muted);font-size:11px}
+.active-event-meta span{padding:0 3px}
+.open-event-button{flex:none;padding:8px 13px;border:1px solid #d8e9df;border-radius:8px;color:#176c50;background:#f0f8f3;font-size:11px;font-weight:700}
+.open-event-button:hover{border-color:#9bc8ad;background:#e7f4eb}
+.grid-checkin{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px;padding:15px 16px;border-radius:11px;background:#f1f8f4}
+.grid-checkin>div:first-child{display:flex;flex-direction:column;gap:2px}
+.grid-checkin>div:first-child>span,.grid-category>div:first-child>span{color:#6e897c;font-size:9px;font-weight:750;letter-spacing:1px}
+.grid-checkin>div:first-child>strong{color:#145e47;font:800 35px/1.1 Manrope,sans-serif}
+.grid-checkin>div:first-child>small{color:#82958b;font-size:10px}
+.grid-card-actions{display:flex;gap:6px}
+.grid-card-actions button{width:34px;height:32px;border:1px solid #dce9e1;border-radius:7px;color:#176c50;background:#fff;font-size:19px;line-height:1}
+.grid-card-actions button:last-child{border-color:#d2e8db;background:#eaf6ee}
+.grid-card-actions button:disabled{opacity:.35}
+.grid-progress{height:5px;overflow:hidden;margin-top:12px;border-radius:8px;background:#eaf0ec}
+.grid-progress span{display:block;height:100%;border-radius:inherit;background:#35a47a}
+.grid-category-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:15px}
+.grid-category{min-width:0;padding:10px 9px;border:1px solid var(--line);border-top:3px solid #55a986;border-radius:9px}
+.grid-category.frees{border-top-color:#9c83ce}
+.grid-category.cards{border-top-color:#6e9dc9}
+.grid-category>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.grid-category>div:first-child>span{font-size:8px;letter-spacing:.6px}
+.grid-category>div:first-child>strong{color:var(--ink);font:800 18px Manrope,sans-serif}
+.grid-category .grid-card-actions{margin-top:8px}
+.grid-category .grid-card-actions button{flex:1;width:auto;height:28px;font-size:16px}
+.grid-event-total{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);color:#65756c;font-size:11px}
+.grid-event-total strong{color:#173f33;font:800 22px Manrope,sans-serif}
+@media(max-width:650px){
+ .grid-view-heading{align-items:flex-start;flex-direction:column}
+ .grid-view-heading h1{font-size:25px}
+ .active-event-grid{grid-template-columns:1fr}
+}
