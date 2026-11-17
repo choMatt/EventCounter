@@ -37,6 +37,7 @@ export default function App() {
   const [events, setEvents] = useState(initialEvents)
   const [activeId, setActiveId] = useState(saved.activeId && initialEvents.some(item => item.id === saved.activeId) ? saved.activeId : initialEvents[0]?.id || null)
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const [showReport, setShowReport] = useState(false)
   const [draft, setDraft] = useState({ venue: '', time: nowTime(), capacity: '' })
   const [history, setHistory] = useState(() => saved.history || [])
   const [notice, setNotice] = useState('')
@@ -92,6 +93,7 @@ export default function App() {
     setEvents(remaining)
     setActiveId(remaining[0]?.id || null)
     setSavedStatus(false)
+    setShowReport(false)
     setNotice('Event finished and moved to history.')
   }
   const copy = async () => {
@@ -173,10 +175,17 @@ export default function App() {
         <div className="counter-grid"><Counter label="Frees" value={event.frees} onChange={v => update('frees', v)} tone="purple" description="Complimentary" /><Counter label="Cash" value={event.cash} onChange={v => update('cash', v)} tone="green" description="Cash payments" /><Counter label="Cards" value={event.cards} onChange={v => update('cards', v)} tone="blue" description="Card payments" /></div>
       </section>
       <section className="total-panel"><div><p className="eyebrow">ATTENDANCE SUMMARY</p><h2>Total guests</h2><p className="total-breakdown">{event.checkIn} check-ins + {event.frees} frees + {event.cash} cash + {event.cards} cards</p></div><strong className="total-number">{total.toLocaleString()}</strong></section>
-      <section className="report-panel panel"><div className="panel-title-row"><div><p className="eyebrow">04 / REPORT</p><h2>Generated report</h2><p className="report-description">This report belongs to {event.venue.trim() || 'the selected event'}.</p></div><span className={`ready-tag ${savedStatus ? 'saved' : ''}`}>{savedStatus ? 'Saved' : 'Ready'}</span></div>
-        <pre className="report-output">{report}</pre><div className="report-actions"><button className="primary-button" onClick={save}>Save event</button><button className="secondary-button" onClick={copy}>Copy report</button><button className="secondary-button share-button" onClick={share}>Share</button><button className="finish-button" onClick={finishEvent}>Finish event</button></div>{notice && <p className="notice" role="status">{notice}</p>}
-      </section>
+      <button className="primary-button generate-report-button" onClick={() => { setShowReport(true); setNotice('') }}>Generate report</button>
+      {notice && <p className="notice" role="status">{notice}</p>}
       </div>
+      </div>}
+      {showReport && event && <div className="report-modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setShowReport(false) }}>
+        <section className="report-modal panel" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
+          <div className="panel-title-row"><div><p className="eyebrow">04 / REPORT</p><h2 id="report-modal-title">Generated report</h2><p className="report-description">This report belongs to {event.venue.trim() || 'the selected event'}.</p></div><div className="report-modal-status"><span className={`ready-tag ${savedStatus ? 'saved' : ''}`}>{savedStatus ? 'Saved' : 'Ready'}</span><button className="report-modal-close" aria-label="Close report" onClick={() => setShowReport(false)}>×</button></div></div>
+          <pre className="report-output">{report}</pre>
+          <div className="report-actions"><button className="primary-button" onClick={save}>Save event</button><button className="secondary-button" onClick={copy}>Copy report</button><button className="secondary-button share-button" onClick={share}>Share</button><button className="finish-button" onClick={finishEvent}>Finish event</button></div>
+          {notice && <p className="notice" role="status">{notice}</p>}
+        </section>
       </div>}
       <footer className="footer"><span>EventCounter</span><span>Your event, counted.</span></footer>
       </main>
