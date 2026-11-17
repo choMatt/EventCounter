@@ -19,6 +19,7 @@ const formatTime = value => {
   if (!Number.isFinite(h) || !Number.isFinite(m)) return value
   return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`
 }
+const eventTotal = event => Number(event.checkIn || 0) + Number(event.frees || 0) + Number(event.cash || 0) + Number(event.cards || 0)
 
 function Counter({ label, value, onChange, tone, description }) {
   return <section className={`counter-card ${tone}`}>
@@ -32,14 +33,21 @@ function Counter({ label, value, onChange, tone, description }) {
 
 export default function App() {
   const saved = useMemo(readData, [])
-  const [event, setEvent] = useState(() => saved.activeEvent || newEvent())
+  const initialEvents = saved.events?.length ? saved.events : [saved.activeEvent || newEvent()]
+  const [events, setEvents] = useState(initialEvents)
+  const [activeId, setActiveId] = useState(saved.activeId || initialEvents[0].id)
   const [history, setHistory] = useState(() => saved.history || [])
   const [notice, setNotice] = useState('')
   const [savedStatus, setSavedStatus] = useState(false)
-  const total = event.checkIn + event.frees + event.cash + event.cards
+  const event = events.find(item => item.id === activeId) || events[0]
+  const total = eventTotal(event)
   const capacity = Math.max(0, Number(event.capacity) || 0)
   const progress = capacity ? Math.min(100, event.checkIn / capacity * 100) : 0
-  useEffect(() => localStorage.setItem(KEY, JSON.stringify({ activeEvent: event, history })), [event, history])
+
+  useEffect(() => {
+    localStorage.setItem(KEY, JSON.stringify({ events, activeId, history }))
+  }, [events, activeId, history])
+
   const report = [
     `WHERE: ${event.venue.trim() || '—'}`,
     `TIME: ${formatTime(event.time)}`,
@@ -47,18 +55,38 @@ export default function App() {
     `FREES: ${event.frees}`, `CASH: ${event.cash}`,
     `CARDS: ${event.cards}`, `TOTAL: ${total}`,
   ].join('\n')
-  const update = (field, value) => { setEvent(current => ({ ...current, [field]: value })); setSavedStatus(false) }
+
+  const update = (field, value) => {
+    setEvents(list => list.map(item => item.id === event.id ? { ...item, [field]: value } : item))
+    setSavedStatus(false)
+  }
+  const addEvent = () => {
+    const item = newEvent()
+    setEvents(list => [...list, item])
+    setActiveId(item.id)
+    setSavedStatus(false)
+    setNotice('New event added. Your other events are still saved.')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
   const save = () => {
     const item = { ...event, total, savedAt: new Date().toISOString() }
-    setHistory(list => [item, ...list.filter(x => x.id !== event.id)].slice(0, 30))
-    setSavedStatus(true); setNotice('Event saved to history.')
+    setHistory(list => [item, ...list.filter(x => x.id !== event.id)].slice(0, 50))
+    setSavedStatus(true)
+    setNotice('Event saved to history. It remains active in your event list.')
   }
-  const startNew = () => {
-    if (total || event.venue.trim()) {
-      const item = { ...event, total, savedAt: new Date().toISOString() }
-      setHistory(list => [item, ...list.filter(x => x.id !== event.id)].slice(0, 30))
+  const finishEvent = () => {
+    const item = { ...event, total, savedAt: new Date().toISOString() }
+    setHistory(list => [item, ...list.filter(x => x.id !== event.id)].slice(0, 50))
+    if (events.length === 1) {
+      const fresh = newEvent()
+      setEvents([fresh]); setActiveId(fresh.id)
+    } else {
+      const remaining = events.filter(x => x.id !== event.id)
+      setEvents(remaining)
+      setActiveId(remaining[0].id)
     }
-    setEvent(newEvent()); setSavedStatus(false); setNotice('New event started.')
+    setSavedStatus(false)
+    setNotice('Event finished and moved to history.')
   }
   const copy = async () => {
     try { await navigator.clipboard.writeText(report); setNotice('Report copied to clipboard.') }
@@ -66,14 +94,18 @@ export default function App() {
   }
   const share = async () => {
     if (!navigator.share) return copy()
-    try { await navigator.share({ title: 'Event check-in report', text: report }) }
+    try { await navigator.share({ title: `Event report - ${event.venue || 'Event'}`, text: report }) }
     catch (error) { if (error.name !== 'AbortError') setNotice('Sharing failed. Try copying the report.') }
   }
   const openHistory = item => {
-    setEvent({ ...item, id: crypto.randomUUID() }); setSavedStatus(true)
-    setNotice('Previous event loaded. Changes will be saved separately.')
+    const restored = { ...item, id: crypto.randomUUID(), createdAt: new Date().toISOString() }
+    setEvents(list => [...list, restored])
+    setActiveId(restored.id)
+    setSavedStatus(false)
+    setNotice('Saved event restored as a new active event.')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+  const removeHistory = id => setHistory(list => list.filter(item => item.id !== id))
 
   return <main className="app-shell">
     <header className="topbar">
@@ -81,9 +113,20 @@ export default function App() {
       <div className="live-pill"><span /> LIVE EVENT TRACKER</div>
     </header>
     <div className="content" id="top">
-      <section className="page-heading"><div><p className="eyebrow">EVENT MANAGEMENT</p><h1>Event check-in</h1><p className="subheading">Keep your count accurate. Generate your report in seconds.</p></div><button className="secondary-button new-event-button" onClick={startNew}>＋ New event</button></section>
+      <section className="page-heading"><div><p className="eyebrow">EVENT MANAGEMENT</p><h1>Event check-in</h1><p className="subheading">Manage multiple events and keep every count separate.</p></div><button className="primary-button new-event-button" onClick={addEvent}>＋ Add event</button></section>
+
+      <section className="active-events-section">
+        <div className="section-heading"><div><p className="eyebrow">YOUR WORKSPACE</p><h2>Active events</h2></div><span className="history-count">{events.length} active</span></div>
+        <div className="event-tabs">
+          {events.map((item, index) => <button key={item.id} className={`event-tab ${item.id === event.id ? 'selected' : ''}`} onClick={() => { setActiveId(item.id); setSavedStatus(false); setNotice('') }}>
+            <span className="event-tab-indicator" /><span className="event-tab-text"><strong>{item.venue.trim() || `New event ${index + 1}`}</strong><small>{formatTime(item.time)} · {eventTotal(item)} guests</small></span><span className="event-tab-arrow">›</span>
+          </button>)}
+          <button className="add-event-tab" onClick={addEvent}>＋ <span>Add another</span></button>
+        </div>
+      </section>
+
       <section className="event-panel panel">
-        <div className="panel-title-row"><div><p className="eyebrow">01 / EVENT DETAILS</p><h2>Event information</h2></div><span className="status-tag"><span /> In progress</span></div>
+        <div className="panel-title-row"><div><p className="eyebrow">01 / EVENT DETAILS</p><h2>Event information</h2></div><span className="status-tag"><span /> Active event</span></div>
         <div className="details-grid">
           <label className="field field-wide"><span>Event location</span><input value={event.venue} onChange={e => update('venue', e.target.value)} placeholder="e.g. DELUXE BAR - MELBOURNE" /></label>
           <label className="field"><span>Event time</span><input type="time" value={event.time} onChange={e => update('time', e.target.value)} /></label>
@@ -101,11 +144,11 @@ export default function App() {
         <div className="counter-grid"><Counter label="Frees" value={event.frees} onChange={v => update('frees', v)} tone="purple" description="Complimentary" /><Counter label="Cash" value={event.cash} onChange={v => update('cash', v)} tone="green" description="Cash payments" /><Counter label="Cards" value={event.cards} onChange={v => update('cards', v)} tone="blue" description="Card payments" /></div>
       </section>
       <section className="total-panel"><div><p className="eyebrow">ATTENDANCE SUMMARY</p><h2>Total guests</h2><p className="total-breakdown">{event.checkIn} check-ins + {event.frees} frees + {event.cash} cash + {event.cards} cards</p></div><strong className="total-number">{total.toLocaleString()}</strong></section>
-      <section className="report-panel panel"><div className="panel-title-row"><div><p className="eyebrow">04 / REPORT</p><h2>Generated report</h2><p className="report-description">Your report updates automatically as you change the counts.</p></div><span className={`ready-tag ${savedStatus ? 'saved' : ''}`}>{savedStatus ? 'Saved' : 'Ready'}</span></div>
-        <pre className="report-output">{report}</pre><div className="report-actions"><button className="primary-button" onClick={save}>Save event</button><button className="secondary-button" onClick={copy}>Copy report</button><button className="secondary-button share-button" onClick={share}>Share</button></div>{notice && <p className="notice" role="status">{notice}</p>}
+      <section className="report-panel panel"><div className="panel-title-row"><div><p className="eyebrow">04 / REPORT</p><h2>Generated report</h2><p className="report-description">This report belongs to {event.venue.trim() || 'the selected event'}.</p></div><span className={`ready-tag ${savedStatus ? 'saved' : ''}`}>{savedStatus ? 'Saved' : 'Ready'}</span></div>
+        <pre className="report-output">{report}</pre><div className="report-actions"><button className="primary-button" onClick={save}>Save event</button><button className="secondary-button" onClick={copy}>Copy report</button><button className="secondary-button share-button" onClick={share}>Share</button><button className="finish-button" onClick={finishEvent}>Finish event</button></div>{notice && <p className="notice" role="status">{notice}</p>}
       </section>
       <section className="history-section"><div className="section-heading"><div><p className="eyebrow">05 / SAVED RECORDS</p><h2>Event history</h2></div><span className="history-count">{history.length} saved</span></div>
-        {!history.length ? <div className="empty-history"><span className="empty-icon">↗</span><strong>No saved events yet</strong><p>Save an event to keep a record of its final counts.</p></div> : <div className="history-list">{history.map(item => <article className="history-item" key={item.id}><div className="history-info"><strong>{item.venue || 'Untitled event'}</strong><span>{formatTime(item.time)} · {new Date(item.savedAt || item.createdAt).toLocaleDateString()}</span></div><div className="history-total"><strong>{item.total ?? (item.checkIn + item.frees + item.cash + item.cards)}</strong><span>guests</span></div><button className="text-button" onClick={() => openHistory(item)}>Open</button><button className="delete-button" aria-label="Delete saved event" onClick={() => setHistory(list => list.filter(x => x.id !== item.id))}>×</button></article>)}</div>}
+        {!history.length ? <div className="empty-history"><span className="empty-icon">↗</span><strong>No saved events yet</strong><p>Save or finish an event to keep a record of its final counts.</p></div> : <div className="history-list">{history.map(item => <article className="history-item" key={item.id}><div className="history-info"><strong>{item.venue || 'Untitled event'}</strong><span>{formatTime(item.time)} · {new Date(item.savedAt || item.createdAt).toLocaleDateString()}</span></div><div className="history-total"><strong>{item.total ?? eventTotal(item)}</strong><span>guests</span></div><button className="text-button" onClick={() => openHistory(item)}>Restore</button><button className="delete-button" aria-label="Delete saved event" onClick={() => removeHistory(item.id)}>×</button></article>)}</div>}
       </section>
       <footer className="footer"><span>EventCounter</span><span>Your event, counted.</span></footer>
     </div>
