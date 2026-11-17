@@ -392,3 +392,178 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
   font-size:12px;
 }
 .dashboard-event-heading>p:last-child span{padding:0 4px}
+
+
+/* Orange accent palette for both themes */
+:root{
+  --green:#e87924;
+  --green-dark:#c45d12;
+}
+.primary-button,.brand-mark,.main-step-button.plus{
+  background:#e87924;
+  color:#fff;
+}
+.primary-button:hover,.main-step-button.plus:hover{background:#cf6418}
+.sidebar-view-button.selected{
+  border-color:#f4c79f;
+  color:#b95712;
+  background:#fff4e9;
+}
+.sidebar-view-button.selected>span,
+.event-tab-arrow{color:#d66b1b}
+.event-tab.selected{
+  border-color:#e9a66f;
+  background:#fff6ed;
+  box-shadow:0 0 0 2px #ffead8;
+}
+.event-tab-indicator,.live-pill span,.status-tag span,.live-label span{
+  background:#ed842e;
+  box-shadow:0 0 0 3px #ffead8;
+}
+.add-event-tab,.open-event-button,.grid-report-button{
+  color:#b95712;
+  border-color:#f1c9a7;
+  background:#fff6ed;
+}
+.grid-checkin{background:#fff5eb}
+.grid-checkin>div:first-child>strong{color:#bd5d17}
+.grid-progress span{background:#e87924}
+.grid-card-actions button{color:#bd5d17;border-color:#f1d3bc}
+.grid-card-actions button:last-child{border-color:#f2c9a8;background:#fff1e4}
+.grid-event-total strong{color:#b95712}
+.step-button.add{background:#fff0e2;border-color:#f2c7a2;color:#bd5d17}
+.checkin-display{background:#fff5eb}
+.checkin-copy strong{color:#b95712}
+.progress-fill{background:#e87924}
+.total-panel{background:#432b1b}
+.theme-toggle{
+  display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 11px;
+  border:1px solid #f0d0b5;border-radius:9px;color:#b95712;background:#fff7ef;
+  font-size:11px;font-weight:700
+}
+.theme-toggle:hover{background:#ffeddd}
+.topbar-actions{display:flex;align-items:center;gap:18px}
+
+/* Dark theme surfaces and text */
+.theme-dark{
+  color:#e8e7e4;
+  background:#17191b;
+  --ink:#f0efec;
+  --text:#e8e7e4;
+  --muted:#a3a5a3;
+  --line:#34383b;
+  --green:#f08a35;
+  --green-dark:#d96d1d;
+}
+.theme-dark .topbar,
+.theme-dark .sidebar,
+.theme-dark .panel,
+.theme-dark .event-tab,
+.theme-dark .history-list,
+.theme-dark .history-item,
+.theme-dark .report-modal,
+.theme-dark .create-event-panel{
+  color:var(--text);
+  background:#222629;
+  border-color:#373d40;
+}
+.theme-dark .brand,
+.theme-dark h1,.theme-dark h2,
+.theme-dark .event-tab-text strong,
+.theme-dark .sidebar-history-item strong,
+.theme-dark .history-info strong,
+.theme-dark .counter-value,
+.theme-dark .grid-category>div:first-child>strong,
+.theme-dark .grid-event-total strong{
+  color:var(--ink);
+}
+.theme-dark .brand-light,
+.theme-dark .eyebrow,
+.theme-dark .subheading,
+.theme-dark .event-tab-text small,
+.theme-dark .sidebar-history-item small,
+.theme-dark .sidebar-empty,
+.theme-dark .active-event-meta,
+.theme-dark .grid-event-total,
+.theme-dark .grid-view-heading p,
+.theme-dark .dashboard-event-heading>p:last-child{
+  color:#a3aaa6;
+}
+.theme-dark .sidebar-view-button{color:#c0c4c1}
+.theme-dark .sidebar-view-button:hover{background:#2d3235}
+.theme-dark .sidebar-view-button.selected{
+  color:#ffad70;background:#38291f;border-color:#80512e
+}
+.theme-dark .sidebar-view-button.selected>span{color:#ffad70}
+.theme-dark .event-tab.selected{
+  background:#38291f;border-color:#a86432;box-shadow:0 0 0 2px #50331f
+}
+.theme-dark .event-tab-indicator{background:#f08a35;box-shadow:0 0 0 3px #50331f}
+.theme-dark .add-event-tab,
+.theme-dark .open-event-button,
+.theme-dark .grid-report-button,
+.theme-dark .theme-toggle{
+  color:#ffb47e;background:#38291f;border-color:#80512e
+}
+.theme-dark .add-event-tab:hover,
+.theme-dark .open-event-button:hover,
+.theme-dark .grid-report-button:hover,
+.theme-dark .theme-toggle:hover{background:#493020}
+.theme-dark .checkin-display,
+.theme-dark .grid-checkin,
+.theme-dark .report-output,
+.theme-dark .create-event-form .field input{
+  color:var(--text);background:#292f30;border-color:#41494a
+}
+.theme-dark .checkin-copy strong,
+.theme-dark .grid-checkin>div:first-child>strong{color:#ffad70}
+.theme-dark .progress-track,
+.theme-dark .grid-progress{background:#3a4140}
+.theme-dark .progress-fill,
+.theme-dark .grid-progress span{background:#f08a35}
+.theme-dark .counter-card,
+.theme-dark .grid-category{
+  background:#262b2d;border-color:#3c4244
+}
+.theme-dark .counter-description,
+.theme-dark .counter-heading .eyebrow,
+.theme-dark .grid-checkin>div:first-child>small,
+.theme-dark .grid-category>div:first-child>span{color:#aab2ad}
+.theme-dark .step-button,
+.theme-dark .grid-card-actions button{
+  color:#ffb47e;background:#303638;border-color:#50595a
+}
+.theme-dark .step-button.add,
+.theme-dark .grid-card-actions button:last-child{
+  color:#ffb47e;background:#493020;border-color:#80512e
+}
+.theme-dark .total-panel{background:#39271b;border-color:#65452d}
+.theme-dark .total-panel h2,
+.theme-dark .total-number,
+.theme-dark .total-breakdown{color:#f5e9df}
+.theme-dark .footer{border-color:#34383b;color:#929a95}
+.theme-dark .report-modal-close{
+  color:var(--text);background:#303638;border-color:#50595a
+}
+.theme-dark .ready-tag{color:#ffb47e;background:#493020}
+.theme-dark .finish-button{color:#f19b91;background:#3b2928;border-color:#70423d}
+.theme-dark .event-readonly-item>strong{color:var(--text)}
+.theme-dark .report-modal-backdrop{background:rgba(0,0,0,.68)}
+.theme-dark .empty-active-state{color:var(--text)}
+.theme-dark .empty-active-state p{color:#a3aaa6}
+.theme-dark .history-count{color:#a3aaa6}
+.theme-dark .sidebar-history-item{border-color:#373d40}
+.theme-dark .event-delete-button:hover{background:#492b29}
+.theme-dark .create-event-form .field span{color:#d7d9d6}
+.theme-dark .create-event-form .field input{color:#f0efec}
+.theme-dark .report-description{color:#a3aaa6}
+.theme-dark .report-modal .report-output{border-color:#41494a}
+.theme-dark .notice{color:#ffb47e}
+.theme-dark .live-pill{color:#c1c7c3}
+.theme-dark .brand-mark{background:#e87924}
+.theme-dark .grid-category.frees{border-top-color:#a88bd9}
+.theme-dark .grid-category.cards{border-top-color:#75a8d6}
+@media(max-width:650px){
+ .topbar-actions{gap:8px}
+ .theme-toggle span{display:none}
+}
