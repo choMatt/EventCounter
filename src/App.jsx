@@ -209,7 +209,6 @@ export default function App() {
       </section>
       <section className="total-panel"><div><p className="eyebrow">ATTENDANCE SUMMARY</p><h2>Total guests</h2><p className="total-breakdown">{event.checkIn} check-ins + {event.frees} frees + {event.cash} cash + {event.cards} cards</p></div><strong className="total-number">{total.toLocaleString()}</strong></section>
       <button className="primary-button generate-report-button" onClick={() => { setShowReport(true); setNotice('') }}>Generate report</button>
-      {notice && <p className="notice" role="status">{notice}</p>}
       </div>
       </div></>}
       {showReport && event && <div className="report-modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setShowReport(false) }}>
@@ -220,7 +219,6 @@ export default function App() {
           {notice && <p className="notice" role="status">{notice}</p>}
         </section>
       </div>}
-      <footer className="footer"><span>EventCounter</span><span>Your event, counted.</span></footer>
       </main>
     </div>
   </div>
