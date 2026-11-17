@@ -257,3 +257,9 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
   .event-readonly-item>strong{font-size:17px}
   .event-readonly-wide>strong{font-size:20px}
 }
+
+
+/* Keep event name and its time/capacity details readable in the sidebar */
+.event-tab-text{min-width:0}
+.event-tab-text strong{display:block;overflow-wrap:anywhere}
+.event-tab-text small{display:block;white-space:normal;line-height:1.4}
