@@ -263,3 +263,9 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
 .event-tab-text{min-width:0}
 .event-tab-text strong{display:block;overflow-wrap:anywhere}
 .event-tab-text small{display:block;white-space:normal;line-height:1.4}
+
+
+/* Increase active event details for easier scanning */
+.event-tab-text strong{font-size:15px;line-height:1.35}
+.event-tab-text small{font-size:12px;line-height:1.5;margin-top:4px}
+.event-tab-main{gap:12px}
