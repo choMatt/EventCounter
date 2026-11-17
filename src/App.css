@@ -180,3 +180,9 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
   .workspace{overflow:visible}
   .dashboard-content{overflow:visible}
 }
+
+
+/* Align the first section headings across the two dashboard columns */
+@media (min-width:1000px){
+  .dashboard-right{padding-top:13px}
+}
