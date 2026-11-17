@@ -6,8 +6,8 @@ const nowTime = () => {
   const d = new Date()
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
-const newEvent = () => ({
-  id: crypto.randomUUID(), venue: '', time: nowTime(), capacity: 429,
+const newEvent = ({ venue, time, capacity }) => ({
+  id: crypto.randomUUID(), venue, time, capacity: Number(capacity),
   checkIn: 0, frees: 0, cash: 0, cards: 0, createdAt: new Date().toISOString(),
 })
 const readData = () => {
@@ -33,9 +33,11 @@ function Counter({ label, value, onChange, tone, description }) {
 
 export default function App() {
   const saved = useMemo(readData, [])
-  const initialEvents = saved.events?.length ? saved.events : [saved.activeEvent || newEvent()]
+  const initialEvents = Array.isArray(saved.events) ? saved.events : saved.activeEvent ? [saved.activeEvent] : []
   const [events, setEvents] = useState(initialEvents)
-  const [activeId, setActiveId] = useState(saved.activeId && initialEvents.some(item => item.id === saved.activeId) ? saved.activeId : initialEvents[0].id)
+  const [activeId, setActiveId] = useState(saved.activeId && initialEvents.some(item => item.id === saved.activeId) ? saved.activeId : initialEvents[0]?.id || null)
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [draft, setDraft] = useState({ venue: '', time: nowTime(), capacity: '' })
   const [history, setHistory] = useState(() => saved.history || [])
   const [notice, setNotice] = useState('')
   const [savedStatus, setSavedStatus] = useState(false)
@@ -61,11 +63,20 @@ export default function App() {
     setSavedStatus(false)
   }
   const addEvent = () => {
-    const item = newEvent()
+    setDraft({ venue: '', time: nowTime(), capacity: '' })
+    setShowCreateForm(true)
+    setNotice('')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+  const startEvent = e => {
+    e.preventDefault()
+    if (!draft.venue.trim() || !draft.time || draft.capacity === '' || Number(draft.capacity) < 0) return
+    const item = newEvent(draft)
     setEvents(list => [...list, item])
     setActiveId(item.id)
+    setShowCreateForm(false)
     setSavedStatus(false)
-    setNotice('New event added. Your other events are still saved.')
+    setNotice('Event started. Your other events are still saved.')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
   const save = () => {
@@ -144,7 +155,15 @@ export default function App() {
       </section>
       </aside>
       <main className="dashboard-content">
-      {!event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <div className="dashboard-grid">
+      {showCreateForm ? <section className="create-event-panel panel">
+        <div className="panel-title-row"><div><p className="eyebrow">NEW EVENT</p><h2>Set up your event</h2></div></div>
+        <form className="create-event-form" onSubmit={startEvent}>
+          <label className="field"><span>Event location</span><input autoFocus required value={draft.venue} onChange={e => setDraft(d => ({ ...d, venue: e.target.value }))} placeholder="e.g. DELUXE BAR - MELBOURNE" /></label>
+          <label className="field"><span>Event time</span><input required type="time" value={draft.time} onChange={e => setDraft(d => ({ ...d, time: e.target.value }))} /></label>
+          <label className="field"><span>Event capacity</span><input required type="number" min="0" inputMode="numeric" value={draft.capacity} onChange={e => setDraft(d => ({ ...d, capacity: e.target.value }))} placeholder="Enter capacity" /></label>
+          <div className="create-event-actions"><button className="primary-button" type="submit">Start event</button><button className="secondary-button" type="button" onClick={() => setShowCreateForm(false)}>Cancel</button></div>
+        </form>
+      </section> : !event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <div className="dashboard-grid">
       <div className="dashboard-left">
       <section className="event-panel panel">
         <div className="panel-title-row"><div><p className="eyebrow">01 / EVENT DETAILS</p><h2>Event information</h2></div><span className="status-tag"><span /> Active event</span></div>
