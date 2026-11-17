@@ -35,7 +35,7 @@ export default function App() {
   const saved = useMemo(readData, [])
   const initialEvents = saved.events?.length ? saved.events : [saved.activeEvent || newEvent()]
   const [events, setEvents] = useState(initialEvents)
-  const [activeId, setActiveId] = useState(saved.activeId || initialEvents[0].id)
+  const [activeId, setActiveId] = useState(saved.activeId && initialEvents.some(item => item.id === saved.activeId) ? saved.activeId : initialEvents[0].id)
   const [history, setHistory] = useState(() => saved.history || [])
   const [notice, setNotice] = useState('')
   const [savedStatus, setSavedStatus] = useState(false)
