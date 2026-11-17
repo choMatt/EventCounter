@@ -39,6 +39,7 @@ export default function App() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showReport, setShowReport] = useState(false)
   const [viewMode, setViewMode] = useState('dashboard')
+  const [theme, setTheme] = useState(() => localStorage.getItem('event-counter-theme') || 'light')
   const [draft, setDraft] = useState({ venue: '', time: nowTime(), capacity: '' })
   const [history, setHistory] = useState(() => saved.history || [])
   const [notice, setNotice] = useState('')
@@ -51,6 +52,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem(KEY, JSON.stringify({ events, activeId, history }))
   }, [events, activeId, history])
+
+  useEffect(() => {
+    localStorage.setItem('event-counter-theme', theme)
+  }, [theme])
 
   const report = event ? [
     `WHERE: ${event.venue.trim() || '—'}`,
@@ -131,10 +136,10 @@ export default function App() {
     setNotice(`Deleted ${name}.`)
   }
 
-  return <div className="app-shell">
+  return <div className={`app-shell ${theme === 'dark' ? 'theme-dark' : ''}`}>
     <header className="topbar">
       <a className="brand" href="#top"><span className="brand-mark">EC</span><span>Event<span className="brand-light">Counter</span></span></a>
-      <div className="live-pill"><span /> LIVE EVENT TRACKER</div>
+      <div className="topbar-actions"><button className="theme-toggle" onClick={() => setTheme(value => value === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>{theme === 'dark' ? '☀' : '☾'} <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span></button><div className="live-pill"><span /> LIVE EVENT TRACKER</div></div>
     </header>
     <div className="workspace" id="top">
       <aside className="sidebar">
