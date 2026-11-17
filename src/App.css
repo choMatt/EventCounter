@@ -114,3 +114,16 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
  .dashboard-content .counter-actions{width:110px;margin:0}
  .dashboard-content .report-actions button{flex:1}
 }
+
+
+/* Restore the original vertically stacked dashboard; preserve the left sidebar */
+@media (min-width:901px){
+  .app-shell{height:auto;min-height:100dvh;overflow:visible}
+  .workspace{height:auto;min-height:calc(100dvh - 60px);overflow:visible}
+  .dashboard-content{height:auto;min-height:0;overflow:visible;display:block}
+  .dashboard-grid{grid-template-columns:minmax(0,1fr);align-items:stretch}
+  .dashboard-left,.dashboard-right{width:100%;min-width:0}
+  .dashboard-content .counter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .dashboard-content .counter-card{display:flex;align-items:center;justify-content:space-between}
+  .dashboard-content .counter-actions{width:100px;margin:0}
+}
