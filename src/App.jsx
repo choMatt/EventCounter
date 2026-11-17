@@ -162,10 +162,10 @@ export default function App() {
       <div className="dashboard-left">
       <section className="event-panel panel">
         <div className="panel-title-row"><div><p className="eyebrow">01 / EVENT DETAILS</p><h2>Event information</h2></div><span className="status-tag"><span /> Active event</span></div>
-        <div className="details-grid">
-          <label className="field field-wide"><span>Event location</span><input value={event.venue} onChange={e => update('venue', e.target.value)} placeholder="e.g. DELUXE BAR - MELBOURNE" /></label>
-          <label className="field"><span>Event time</span><input type="time" value={event.time} onChange={e => update('time', e.target.value)} /></label>
-          <label className="field"><span>Event capacity</span><input type="number" min="0" inputMode="numeric" value={event.capacity} onChange={e => update('capacity', e.target.value)} /></label>
+        <div className="event-readonly-details">
+          <div className="event-readonly-item event-readonly-wide"><span>Event location</span><strong>{event.venue || 'Untitled event'}</strong></div>
+          <div className="event-readonly-item"><span>Event time</span><strong>{formatTime(event.time)}</strong></div>
+          <div className="event-readonly-item"><span>Event capacity</span><strong>{capacity.toLocaleString()}</strong></div>
         </div>
       </section>
       <section className="checkin-panel panel">
