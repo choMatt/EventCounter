@@ -107,7 +107,7 @@ export default function App() {
   }
   const removeHistory = id => setHistory(list => list.filter(item => item.id !== id))
 
-  return <main className="app-shell">
+  return <div className="app-shell">
     <header className="topbar">
       <a className="brand" href="#top"><span className="brand-mark">EC</span><span>Event<span className="brand-light">Counter</span></span></a>
       <div className="live-pill"><span /> LIVE EVENT TRACKER</div>
@@ -152,5 +152,5 @@ export default function App() {
       </section>
       <footer className="footer"><span>EventCounter</span><span>Your event, counted.</span></footer>
     </div>
-  </main>
+  </div>
 }
