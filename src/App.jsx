@@ -175,7 +175,7 @@ export default function App() {
           <div className="create-event-actions"><button className="primary-button" type="submit">Start event</button><button className="secondary-button" type="button" onClick={() => setShowCreateForm(false)}>Cancel</button></div>
         </form>
       </section> : viewMode === 'grid' ? <section className="events-grid-view">
-        {events.length === 0 ? <div className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></div> : <div className="active-event-grid">
+        {events.length === 0 ? <div className="empty-active-state"><h2>Nothing to see here, AILAX</h2><p>Click <strong>Add event</strong> to get started.</p></div> : <div className="active-event-grid">
           {events.map(item => {
             const itemTotal = eventTotal(item)
             const itemCapacity = Math.max(0, Number(item.capacity) || 0)
@@ -192,7 +192,7 @@ export default function App() {
             </article>
           })}
         </div>}
-      </section> : !event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <>
+      </section> : !event ? <section className="empty-active-state"><h2>Nothing to see here, AILAX</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <>
       <header className="dashboard-event-heading"><p className="eyebrow">ACTIVE EVENT</p><h1>{event.venue || 'Untitled event'}</h1><p>{formatTime(event.time)} <span>·</span> {capacity.toLocaleString()} capacity</p></header>
       <div className="dashboard-grid">
       <div className="dashboard-left">
