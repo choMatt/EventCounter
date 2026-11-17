@@ -137,7 +137,7 @@ export default function App() {
         <div className="event-tabs">
           {events.map((item, index) => <div key={item.id} className={`event-tab ${item.id === event.id ? 'selected' : ''}`}>
             <button className="event-tab-main" onClick={() => { setActiveId(item.id); setSavedStatus(false); setNotice('') }}>
-              <span className="event-tab-indicator" /><span className="event-tab-text"><strong>{item.venue.trim() || `New event ${index + 1}`}</strong><small>{formatTime(item.time)} · {eventTotal(item)} guests</small></span><span className="event-tab-arrow">›</span>
+              <span className="event-tab-indicator" /><span className="event-tab-text"><strong>{item.venue.trim() || `New event ${index + 1}`}</strong><small>{formatTime(item.time)} · {Number(item.capacity).toLocaleString()} capacity</small></span><span className="event-tab-arrow">›</span>
             </button>
             <button className="event-delete-button" aria-label={`Delete ${item.venue || 'event'}`} title="Delete event" onClick={() => deleteEvent(item.id)}>×</button>
           </div>)}
@@ -160,14 +160,6 @@ export default function App() {
         </form>
       </section> : !event ? <section className="empty-active-state"><h2>Nothing to see here</h2><p>Click <strong>Add event</strong> to get started.</p></section> : <div className="dashboard-grid">
       <div className="dashboard-left">
-      <section className="event-panel panel">
-        <div className="panel-title-row"><div><p className="eyebrow">01 / EVENT DETAILS</p><h2>Event information</h2></div><span className="status-tag"><span /> Active event</span></div>
-        <div className="event-readonly-details">
-          <div className="event-readonly-item event-readonly-wide"><span>Event location</span><strong>{event.venue || 'Untitled event'}</strong></div>
-          <div className="event-readonly-item"><span>Event time</span><strong>{formatTime(event.time)}</strong></div>
-          <div className="event-readonly-item"><span>Event capacity</span><strong>{capacity.toLocaleString()}</strong></div>
-        </div>
-      </section>
       <section className="checkin-panel panel">
         <div className="panel-title-row"><div><p className="eyebrow">02 / ATTENDANCE</p><h2>Live check-in counter</h2></div><span className="live-label"><span /> Updating live</span></div>
         <div className="checkin-display"><div className="checkin-copy"><span className="eyebrow">CHECK IN</span><strong>{event.checkIn}</strong><span className="capacity-copy">of {capacity.toLocaleString()} capacity</span></div>
