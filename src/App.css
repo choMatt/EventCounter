@@ -230,3 +230,30 @@ h1,h2,p{margin-top:0}h1,h2{font-family:Manrope,sans-serif;color:var(--ink)}h1{ma
   font-weight:600;
   overflow-wrap:anywhere;
 }
+
+
+/* Present started-event details as typography, not disabled input controls */
+.event-readonly-item{gap:5px}
+.event-readonly-item>span{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+.event-readonly-item>strong{
+  min-height:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:var(--text);
+  font-size:19px;
+  line-height:1.35;
+  font-weight:700;
+}
+.event-readonly-wide>strong{font-size:22px}
+@media(max-width:650px){
+  .event-readonly-item>strong{font-size:17px}
+  .event-readonly-wide>strong{font-size:20px}
+}
